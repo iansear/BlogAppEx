@@ -5,12 +5,12 @@ const router = express.Router()
 router.post("/login", (req, res) => {
     let username = req.body.username
     let password = req.body.password
-    db.one("SELECT user_id, username, password FROM users WHERE user_name = $1;", [username]).then((user) => {
+    db.one("SELECT user_id, username, password FROM users WHERE username = $1;", [username]).then((user) => {
         bcrypt.compare(password, user.password).then(isPassword => {
             if(isPassword) {
                 req.session.user_id = user.user_id
                 req.session.username = user.user_name
-                res.redirect("/posts")
+                res.redirect("/posts/wall")
             } else {
                 res.render("login", {message: "Incorrect Login Info"})
             }
@@ -33,7 +33,7 @@ router.post("/register", (req, res) => {
         .then( (user_id) => {
             req.session.user_id = user_id.user_id
             req.session.username = username
-            res.redirect("/posts")
+            res.redirect("/posts/wall")
         })
     })
 })

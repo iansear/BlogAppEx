@@ -16,6 +16,13 @@ router.post("/", (req, res) => {
     })
 })
 
+router.get("/wall", (req, res) => {
+    db.any("SELECT u.username, p.title, p.body FROM users u JOIN posts p ON u.user_id = p.user_id;").then((posts) => {
+        console.log(posts)
+        res.render("wall", {message: "here"})
+    })
+})
+
 router.get("/:post", async (req, res) => {
     let post_id = req.params.post
     const post = await db.any("SELECT post_id, title, body FROM posts WHERE post_id = $1;", [post_id])
